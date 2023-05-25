@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import tensorflow as tf
+import pickle
 from tensorflow import keras
 from keras.models import Sequential 
 from keras.layers import Dense, Embedding, GlobalAveragePooling1D
@@ -55,3 +56,12 @@ model.compile(loss='sparse_categorical_crossentropy',
 # training data
 epochs = 500
 history = model.fit(padded_sequences, np.array(training_labels), epochs=epochs)
+
+model.save('chat_model')
+# to save the fitted tokenizer
+with open('tokenizer.pickle', 'wb') as handle:
+    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+# to save the fitted label encoder
+with open('label_encoder.pickle', 'wb') as ecn_file:
+    pickle.dump(LblEncoder, ecn_file, protocol=pickle.HIGHEST_PROTOCOL)
