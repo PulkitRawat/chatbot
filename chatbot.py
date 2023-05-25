@@ -1,6 +1,5 @@
 import json
 import numpy as np
-import tensorflow as tf
 import pickle
 from tensorflow import keras
 from keras.models import Sequential 
@@ -14,14 +13,14 @@ with open('intent.json') as file:
 training_sentences = []
 training_labels = []
 labels =[]
-responses = []
+response = []
 
 for intent in data['intents']:
     # for pattern in intent['pattern']:
     #     training_sentences.append(pattern)
     training_sentences.append(intent['pattern'])
     training_labels.append(intent['tag'])
-    responses.append(intent['response'])
+    response.append(intent['response'])
 
     if intent['tag'] not in labels:
         labels.append(intent['tag'])
