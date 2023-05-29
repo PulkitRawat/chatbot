@@ -8,17 +8,19 @@ from colorama import Fore, Style, Back
 from tensorflow import keras
 from sklearn.preprocessing import LabelEncoder
 from keras.preprocessing.text import Tokenizer
+from keras.models import Sequential
+from chatbot import Lbl_Encoder, tokenizer, model, training_labels 
 
 with open('intent.json') as file:
     data = json.load(file)
 
 def chat():
     # load trained model
-    model = keras.models.load_model('chat_model')
+    modellk = keras.models.load_model('chat_model')
 
     # load tokenizer object
     with open('tokenizer.pickle', 'rb') as handle:
-        tokenizer = pickle.load(handle)
+        tokeniizer = pickle.load(handle)
 
     # load label encoder object
     with open('label_encoder.pickle', 'rb') as enc:
@@ -32,16 +34,26 @@ def chat():
         inp = input()
         if inp.lower() == "quit":
             break
+        
+        # tokenizer = Tokenizer(1000, oov_token= "<OOV>")
+        # tokenizer.fit_on_texts([inp])
 
-        result = model.predict(keras.preprocessing.sequence.pad_sequences(tokenizer.texts_to_sequences([inp]),
-                                             truncating='post', maxlen=max_len))
-        tag = lbl_encoder.inverse_transform([np.argmax(result)])
+        # model = Sequential()
 
+        result = model.predict(keras.utils.pad_sequences(tokenizer.texts_to_sequences([inp]),truncating='post', maxlen=max_len))
+        # print(result)
+        # lbl_encoder = LabelEncoder()
+        # lbl_encoder.fit([np.argmax(result)])
+        
+        tag = Lbl_Encoder.inverse_transform([np.argmax(result)])
+        # print(tag)
         for i in data['intents']:
-            if i['tag'] == tag:
+            # print(i["tag"])
+
+            if i["tag"] == tag:
                 print(Fore.GREEN + "ChatBot:" + Style.RESET_ALL , np.random.choice(i['response']))
 
-        # print(Fore.GREEN + "ChatBot:" + Style.RESET_ALL,random.choice(responses))
+#         # print(Fore.GREEN + "ChatBot:" + Style.RESET_ALL,random.choice(responses))
 
 print(Fore.YELLOW + "Start messaging with the bot (type quit to stop)!" + Style.RESET_ALL)
 chat()

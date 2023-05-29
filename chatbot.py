@@ -16,10 +16,10 @@ labels =[]
 response = []
 
 for intent in data['intents']:
-    # for pattern in intent['pattern']:
-    #     training_sentences.append(pattern)
-    training_sentences.append(intent['pattern'])
-    training_labels.append(intent['tag'])
+    for pattern in intent['pattern']:
+        training_sentences.append(pattern)
+    # training_sentences.append(intent['pattern'])
+        training_labels.append(intent['tag'])
     response.append(intent['response'])
 
     if intent['tag'] not in labels:
@@ -29,7 +29,10 @@ num_classes = len(labels)
 # converting an arraylike variable to array
 LblEncoder = LabelEncoder()
 LblEncoder.fit(training_labels)
-training_labels = LblEncoder.transform(training_labels)
+training_labels1 = LblEncoder.transform(training_labels)
+
+Lbl_Encoder = LabelEncoder()
+Lbl_Encoder.fit(training_labels)
 
 vocab_size = 1000
 embedding_dim = 16
@@ -54,7 +57,7 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 # training data
 epochs = 500
-history = model.fit(padded_sequences, np.array(training_labels), epochs=epochs)
+history = model.fit(padded_sequences, np.array(training_labels1), epochs=epochs)
 
 model.save('chat_model')
 # to save the fitted tokenizer
